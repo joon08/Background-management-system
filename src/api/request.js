@@ -3,7 +3,7 @@ import errCode from "../config/error-code";
 
 const axiosInstance = axios.create({
   baseURL: "/api",
-  timeout: 15000,
+  timeout: 10000,
   headers: {}
 });
 
@@ -41,9 +41,9 @@ axiosInstance.interceptors.response.use(
     if (err.response) {
       errMsg = errCode[err.response.status];
     } else {
-      if (err.msg.indexOf("Network Error") !== -1) {
+      if (err.message.indexOf("Network Error") !== -1) {
         errMsg = "网络连接错误";
-      } else if (err.msg.indexOf("timeout") !== -1) {
+      } else if (err.message.indexOf("timeout") !== -1) {
         errMsg = "网络连接超时";
       }
     }

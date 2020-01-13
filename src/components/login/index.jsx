@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import { Form, Icon, Input, Button, message } from "antd";
-import axios from "axios";
+import { connect } from "react-redux";
 
+import { saveUserAsync, getLineAsync } from "../../redux/actions";
 import "./index.less";
-import logo from "./logo.png";
+import logo from "./favicon.ico";
 
+@connect(data => ({ string: data.string }), { saveUserAsync, getLineAsync })
 @Form.create()
 class Login extends Component {
   //表单输入校验
@@ -26,24 +28,22 @@ class Login extends Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         const { username, password } = values;
-        axios
-          .post("/api/login", { username, password })
+        this.props
+          .saveUserAsync(username, password)
           .then(response => {
-            if (response.data.status === 0) {
-              this.props.history.replace("/");
-            } else {
-              message.error(response.data.msg);
-            }
-            this.props.form.resetFields(["password"]);
+            this.props.history.replace("/");
           })
-          .catch(err => {
-            console.log(err);
-            message.error("网络异常");
+          .catch(msg => {
+            message.error(msg);
             this.props.form.resetFields(["password"]);
           });
       }
     });
   };
+
+  componentDidMount() {
+    this.props.getLineAsync()
+  }
 
   render() {
     const { getFieldDecorator } = this.props.form;
@@ -76,6 +76,7 @@ class Login extends Component {
                     <Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />
                   }
                   placeholder="用户名"
+                  autoComplete="off"
                 />
               )}
             </Form.Item>
@@ -99,6 +100,7 @@ class Login extends Component {
             </Form.Item>
           </Form>
         </section>
+        <span className="line">{this.props.string}</span>
       </div>
     );
   }
