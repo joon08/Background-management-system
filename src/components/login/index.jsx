@@ -1,11 +1,13 @@
 import React, { Component } from "react";
-import { Form, Icon, Input, Button } from "antd";
+import { Form, Icon, Input, Button, message } from "antd";
+import axios from "axios";
 
 import "./index.less";
 import logo from "./logo.png";
 
 @Form.create()
 class Login extends Component {
+  //表单输入校验
   validator = (rule, value, callback) => {
     const hint = rule.field === "username" ? "用户名" : "密码";
     const reg = /^\w+$/;
@@ -16,6 +18,32 @@ class Login extends Component {
     } else if (!reg.test(value)) {
       callback(`${hint}只能包含数字、字母、下划线`);
     }
+    callback(); //callback必须调用
+  };
+
+  handleSubmit = e => {
+    e.preventDefault();
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        const { username, password } = values;
+        axios
+          .post("/api/login", { username, password })
+          .then(response => {
+            console.log(response);
+            if (response.data.status === 0) {
+              this.props.history.replace("/");
+            } else {
+              message.error(response.data.msg);
+            }
+            this.props.form.resetFields(["password"]);
+          })
+          .catch(err => {
+            console.log(err);
+            message.error("网络异常");
+            this.props.form.resetFields(["password"]);
+          });
+      }
+    });
   };
 
   render() {
@@ -27,7 +55,7 @@ class Login extends Component {
           <h1>React项目: 后台管理系统</h1>
         </header>
         <section className="login-section">
-          <form className="login-section-form">
+          <Form className="login-section-form" onSubmit={this.handleSubmit}>
             <h2>用户登录</h2>
             <Form.Item>
               {getFieldDecorator("username", {
@@ -66,11 +94,11 @@ class Login extends Component {
               )}
             </Form.Item>
             <Form.Item>
-              <Button type="primary" className="login-btn">
+              <Button type="primary" className="login-btn" htmlType="submit">
                 登录
               </Button>
             </Form.Item>
-          </form>
+          </Form>
         </section>
       </div>
     );
