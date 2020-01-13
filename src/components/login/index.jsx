@@ -29,7 +29,6 @@ class Login extends Component {
         axios
           .post("/api/login", { username, password })
           .then(response => {
-            console.log(response);
             if (response.data.status === 0) {
               this.props.history.replace("/");
             } else {
