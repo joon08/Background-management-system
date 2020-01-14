@@ -2,11 +2,12 @@ import React, { Component } from "react";
 import { Layout, Breadcrumb } from "antd";
 
 import LeftNav from "./left-nav";
+import HeaderMain from "./header-main";
 
 import logo from "$assets/imgs/favicon.ico";
 import "./index.less";
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Content, Footer, Sider } = Layout;
 
 class BasicLayout extends Component {
   state = {
@@ -38,7 +39,7 @@ class BasicLayout extends Component {
           <LeftNav />
         </Sider>
         <Layout>
-          <Header style={{ background: "#fff", padding: 0 }} />
+          <HeaderMain />
           <Content style={{ margin: "0 16px" }}>
             <Breadcrumb style={{ margin: "16px 0" }}>
               <Breadcrumb.Item>User</Breadcrumb.Item>
