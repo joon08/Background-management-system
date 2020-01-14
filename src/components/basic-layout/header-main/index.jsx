@@ -18,15 +18,39 @@ const { confirm } = Modal;
 @withRouter
 class HeaderMain extends Component {
   state = {
-    isScreenFull: false
+    isScreenFull: false,
+    time: ""
   };
 
+  timer = null;
   componentDidMount() {
     screenfull.on("change", this.handleScreenFull);
+
+    this.timer = setInterval(() => {
+      const date = new Date();
+      const time =
+        date.getFullYear() +
+        "/" +
+        (date.getMonth() + 1 < 10
+          ? "0" + (date.getMonth() + 1)
+          : date.getMonth() + 1) +
+        "/" +
+        (date.getDate() < 10 ? "0" + date.getDate() : date.getDate()) +
+        " " +
+        (date.getHours() < 10 ? "0" + date.getHours() : date.getHours()) +
+        ":" +
+        (date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()) +
+        ":" +
+        (date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds());
+      this.setState({
+        time
+      });
+    }, 1000);
   }
 
   componentWillUnmount() {
     screenfull.off("change", this.handleScreenFull);
+    clearInterval(this.timer);
   }
 
   handleScreenFull = () => {
@@ -75,7 +99,7 @@ class HeaderMain extends Component {
         </div>
         <div className="layout-head-bottom">
           <span>商品管理</span>
-          <span>2020/01/14 15:58:37</span>
+          <span>{this.state.time}</span>
         </div>
       </Header>
     );
