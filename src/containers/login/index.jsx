@@ -101,15 +101,6 @@ class Login extends Component {
           </Form>
         </section>
         <span className="line">{this.props.string}</span>
-        <iframe
-          src="https://api.isoyu.com/gy/"
-          title="loveBaby"
-          className="baby"
-          frameBorder="0"
-          scrolling="no"
-          width="400"
-          height="500"
-        ></iframe>
       </div>
     );
   }

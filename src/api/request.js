@@ -1,4 +1,6 @@
 import axios from "axios";
+
+import store from "$redux/store";
 import errCode from "../config/error-code";
 
 const axiosInstance = axios.create({
@@ -8,7 +10,7 @@ const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use(config => {
-  let token = "";
+  let token = store.getState().user.token;
   if (token) {
     config.headers.authorization = `Bearer ${token}`;
   }
