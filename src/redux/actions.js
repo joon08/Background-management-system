@@ -2,12 +2,14 @@
 
 import { reqLogin } from "../api";
 import { setItem } from "../utils/storage";
-import { SAVE_USER, GET_LINE } from "./action-types";
+import { SAVE_USER, GET_LINE, REMOVE_USER } from "./action-types";
 import axios from "axios";
 
 const saveUser = user => ({ type: SAVE_USER, data: user });
 
 const getLine = string => ({ type: GET_LINE, data: string });
+
+export const removeUser = () => ({ type: REMOVE_USER });
 
 export function saveUserAsync(username, password) {
   return dispatch => {

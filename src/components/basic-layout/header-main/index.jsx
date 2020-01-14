@@ -1,12 +1,22 @@
 import React, { Component } from "react";
-import { Button, Icon, Layout } from "antd";
+import { Button, Icon, Layout, Modal } from "antd";
 import screenfull from "screenfull";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+
+import { removeItem } from "$utils/storage";
+import { removeUser } from "$redux/actions";
 
 import "./index.less";
 
 const { Header } = Layout;
+const { confirm } = Modal;
 
-export default class HeaderMain extends Component {
+@connect(state => ({ username: state.user.user && state.user.user.username }), {
+  removeUser
+})
+@withRouter
+class HeaderMain extends Component {
   state = {
     isScreenFull: false
   };
@@ -29,6 +39,21 @@ export default class HeaderMain extends Component {
     screenfull.toggle();
   };
 
+  logout = () => {
+    confirm({
+      title: "您确定要退出登录吗?",
+      okText: "确认",
+      cancelText: "取消",
+      onOk: () => {
+        //清除登录信息，跳转到login界面
+        removeItem("user"); //删除localStorage中的信息
+        this.props.removeUser(); //删除redux中的信息
+        this.props.history.replace("/login");
+      },
+      onCancel() {}
+    });
+  };
+
   render() {
     const { isScreenFull } = this.state;
     return (
@@ -43,8 +68,8 @@ export default class HeaderMain extends Component {
           <Button size="small" className="layout-head-lang">
             English
           </Button>
-          <span>hello, admin</span>
-          <Button size="small" type="link">
+          <span>hello, {this.props.username}</span>
+          <Button size="small" type="link" onClick={this.logout}>
             退 出
           </Button>
         </div>
@@ -56,3 +81,5 @@ export default class HeaderMain extends Component {
     );
   }
 }
+
+export default HeaderMain;
