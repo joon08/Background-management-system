@@ -28,6 +28,7 @@ module.exports = override(
     $conf: resolve(__dirname, "./src/config"),
     $cont: resolve(__dirname, "./src/containers"),
     $redux: resolve(__dirname, "./src/redux"),
-    $utils: resolve(__dirname, "./src/utils")
+    $utils: resolve(__dirname, "./src/utils"),
+    $assets: resolve(__dirname, "./src/assets")
   })
 );

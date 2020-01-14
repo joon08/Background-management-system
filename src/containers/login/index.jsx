@@ -6,7 +6,7 @@ import withCheckLogin from "$cont/with-check-login";
 import { saveUserAsync, getLineAsync } from "../../redux/actions";
 
 import "./index.less";
-import logo from "./favicon.ico";
+import logo from "$assets/imgs/favicon.ico";
 
 @withCheckLogin
 @connect(data => ({ string: data.string }), { saveUserAsync, getLineAsync })

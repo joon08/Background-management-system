@@ -14,7 +14,8 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.3.0",
     "redux": "^4.0.5",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "screenfull": "^5.0.0"
   },
   "scripts": {
     "start": "react-app-rewired start",
@@ -47,5 +48,9 @@
     "react-app-rewired": "^2.1.5",
     "redux-devtools-extension": "^2.13.8"
   },
-  "proxy": "http://47.103.203.152"
+  "proxy": "http://47.103.203.152",
+  "main": "index.js",
+  "repository": "git@github.com:joon08/Background-management-system.git",
+  "author": "joon <351117803@qq.com>",
+  "license": "MIT"
 }
