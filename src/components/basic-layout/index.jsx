@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { Layout, Breadcrumb } from "antd";
+import { Layout } from "antd";
 
+import withCheckLogin from "$cont/with-check-login";
 import LeftNav from "./left-nav";
 import HeaderMain from "./header-main";
 
@@ -9,6 +10,8 @@ import "./index.less";
 
 const { Content, Footer, Sider } = Layout;
 
+
+@withCheckLogin
 class BasicLayout extends Component {
   state = {
     collapsed: false,
@@ -16,7 +19,6 @@ class BasicLayout extends Component {
   };
 
   onCollapse = collapsed => {
-    console.log(collapsed);
     const isDisplay = !this.state.isDisplay;
 
     this.setState({ collapsed, isDisplay });
@@ -40,17 +42,13 @@ class BasicLayout extends Component {
         </Sider>
         <Layout>
           <HeaderMain />
-          <Content style={{ margin: "0 16px" }}>
-            <Breadcrumb style={{ margin: "16px 0" }}>
-              <Breadcrumb.Item>User</Breadcrumb.Item>
-              <Breadcrumb.Item>Bill</Breadcrumb.Item>
-            </Breadcrumb>
+          <Content style={{ margin: "30px 16px 0 16px" }}>
             <div style={{ padding: 24, background: "#fff", minHeight: 360 }}>
               {this.props.children}
             </div>
           </Content>
           <Footer style={{ textAlign: "center" }}>
-            Ant Design ©2018 Created by Ant UED
+            Ant Design ©2020 Created by Ant UED
           </Footer>
         </Layout>
       </Layout>

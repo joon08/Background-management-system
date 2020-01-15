@@ -1,6 +1,11 @@
 //根据prevState和action对象生成newState 函数
 import { combineReducers } from "redux";
-import { SAVE_USER, GET_LINE, REMOVE_USER } from "./action-types";
+import {
+  SAVE_USER,
+  GET_LINE,
+  REMOVE_USER,
+  CHANGE_LANGUAGE
+} from "./action-types";
 import { getItem } from "../utils/storage";
 
 const initUser = getItem("user") || {};
@@ -24,7 +29,18 @@ function string(prevState = "正在加载今日诗词....", action) {
   }
 }
 
+const initLang = navigator.language || navigator.languages[0] || "zh-CN";
+function language(prevState = initLang, action) {
+  switch (action.type) {
+    case CHANGE_LANGUAGE:
+      return action.data;
+    default:
+      return prevState;
+  }
+}
+
 export default combineReducers({
   user,
-  string
+  string,
+  language
 });

@@ -3,18 +3,27 @@ import { Button, Icon, Layout, Modal } from "antd";
 import screenfull from "screenfull";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
+import { FormattedMessage, injectIntl } from "react-intl";
+import dayjs from "dayjs";
 
 import { removeItem } from "$utils/storage";
-import { removeUser } from "$redux/actions";
-
+import { removeUser, changeLanguage } from "$redux/actions";
 import "./index.less";
 
 const { Header } = Layout;
 const { confirm } = Modal;
 
-@connect(state => ({ username: state.user.user && state.user.user.username }), {
-  removeUser
-})
+@injectIntl
+@connect(
+  state => ({
+    username: state.user.user && state.user.user.username,
+    language: state.language
+  }),
+  {
+    removeUser,
+    changeLanguage
+  }
+)
 @withRouter
 class HeaderMain extends Component {
   state = {
@@ -27,21 +36,7 @@ class HeaderMain extends Component {
     screenfull.on("change", this.handleScreenFull);
 
     this.timer = setInterval(() => {
-      const date = new Date();
-      const time =
-        date.getFullYear() +
-        "/" +
-        (date.getMonth() + 1 < 10
-          ? "0" + (date.getMonth() + 1)
-          : date.getMonth() + 1) +
-        "/" +
-        (date.getDate() < 10 ? "0" + date.getDate() : date.getDate()) +
-        " " +
-        (date.getHours() < 10 ? "0" + date.getHours() : date.getHours()) +
-        ":" +
-        (date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()) +
-        ":" +
-        (date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds());
+      const time = dayjs(new Date()).format("YYYY/MM/DD HH:mm:ss");
       this.setState({
         time
       });
@@ -65,9 +60,7 @@ class HeaderMain extends Component {
 
   logout = () => {
     confirm({
-      title: "您确定要退出登录吗?",
-      okText: "确认",
-      cancelText: "取消",
+      title: this.props.intl.formatMessage({ id: "logout" }),
       onOk: () => {
         //清除登录信息，跳转到login界面
         removeItem("user"); //删除localStorage中的信息
@@ -76,6 +69,11 @@ class HeaderMain extends Component {
       },
       onCancel() {}
     });
+  };
+
+  language = () => {
+    const lang = this.props.language === "en" ? "zh-CN" : "en";
+    this.props.changeLanguage(lang);
   };
 
   render() {
@@ -89,16 +87,24 @@ class HeaderMain extends Component {
           <Button size="small" onClick={this.screenFull}>
             <Icon type={isScreenFull ? "fullscreen-exit" : "fullscreen"} />
           </Button>
-          <Button size="small" className="layout-head-lang">
-            English
+          <Button
+            size="small"
+            className="layout-head-lang"
+            onClick={this.language}
+          >
+            {this.props.language === "en" ? "中文" : "English"}
           </Button>
-          <span>hello, {this.props.username}</span>
+          <span style={{ userSelect: "none" }}>
+            hello, {this.props.username}
+          </span>
           <Button size="small" type="link" onClick={this.logout}>
             退 出
           </Button>
         </div>
         <div className="layout-head-bottom">
-          <span>商品管理</span>
+          <span>
+            <FormattedMessage id="home" />
+          </span>
           <span>{this.state.time}</span>
         </div>
       </Header>
