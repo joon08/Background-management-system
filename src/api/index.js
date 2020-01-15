@@ -14,3 +14,10 @@ export const reqLogin = (username, password) => {
     }
   });
 };
+
+export const reqGetTableData = () => {
+  return axiosInstance({
+    method: "GET",
+    url: "/category/get"
+  });
+};

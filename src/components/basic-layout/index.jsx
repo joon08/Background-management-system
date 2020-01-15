@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Layout } from "antd";
+import { FormattedMessage } from "react-intl";
 
 import withCheckLogin from "$cont/with-check-login";
 import LeftNav from "./left-nav";
@@ -9,7 +10,6 @@ import logo from "$assets/imgs/favicon.ico";
 import "./index.less";
 
 const { Content, Footer, Sider } = Layout;
-
 
 @withCheckLogin
 class BasicLayout extends Component {
@@ -35,7 +35,7 @@ class BasicLayout extends Component {
           <div className="layout-logo">
             <img src={logo} alt="logo" />
             <h1 style={{ display: this.state.isDisplay ? "block" : "none" }}>
-              商城后台
+              <FormattedMessage id="title" />
             </h1>
           </div>
           <LeftNav />

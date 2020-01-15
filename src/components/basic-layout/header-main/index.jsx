@@ -9,6 +9,7 @@ import dayjs from "dayjs";
 import { removeItem } from "$utils/storage";
 import { removeUser, changeLanguage } from "$redux/actions";
 import "./index.less";
+import menus from "$conf/menus";
 
 const { Header } = Layout;
 const { confirm } = Modal;
@@ -47,17 +48,16 @@ class HeaderMain extends Component {
     screenfull.off("change", this.handleScreenFull);
     clearInterval(this.timer);
   }
-
+  //全屏
   handleScreenFull = () => {
     this.setState({
       isScreenFull: !this.state.isScreenFull
     });
   };
-
   screenFull = () => {
     screenfull.toggle();
   };
-
+  //登出
   logout = () => {
     confirm({
       title: this.props.intl.formatMessage({ id: "logout" }),
@@ -70,11 +70,29 @@ class HeaderMain extends Component {
       onCancel() {}
     });
   };
-
+  //国际化
   language = () => {
     const lang = this.props.language === "en" ? "zh-CN" : "en";
     this.props.changeLanguage(lang);
   };
+  //根据路径显示标题
+  findTitle(menus, pathname) {
+    for (let i = 0; i < menus.length; i++) {
+      const menu = menus[i];
+      if (menu.children) {
+        for (let j = 0; j < menu.children.length; j++) {
+          const cMenu = menu.children[j];
+          if (cMenu.path === pathname) {
+            return cMenu.title;
+          }
+        }
+      } else {
+        if (menu.path === pathname) {
+          return menu.title;
+        }
+      }
+    }
+  }
 
   render() {
     const { isScreenFull } = this.state;
@@ -103,7 +121,9 @@ class HeaderMain extends Component {
         </div>
         <div className="layout-head-bottom">
           <span>
-            <FormattedMessage id="home" />
+            <FormattedMessage
+              id={this.findTitle(menus, this.props.location.pathname)}
+            />
           </span>
           <span>{this.state.time}</span>
         </div>

@@ -4,7 +4,8 @@ import {
   SAVE_USER,
   GET_LINE,
   REMOVE_USER,
-  CHANGE_LANGUAGE
+  CHANGE_LANGUAGE,
+  GET_TABLE_DATA
 } from "./action-types";
 import { getItem } from "../utils/storage";
 
@@ -39,8 +40,18 @@ function language(prevState = initLang, action) {
   }
 }
 
+function tableData(prevState = [], action) {
+  switch (action.type) {
+    case GET_TABLE_DATA:
+      return action.data;
+    default:
+      return prevState;
+  }
+}
+
 export default combineReducers({
   user,
   string,
-  language
+  language,
+  tableData
 });
