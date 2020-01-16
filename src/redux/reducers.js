@@ -5,7 +5,8 @@ import {
   GET_LINE,
   REMOVE_USER,
   CHANGE_LANGUAGE,
-  GET_TABLE_DATA
+  GET_TABLE_DATA,
+  ADD_CATEGORY
 } from "./action-types";
 import { getItem } from "../utils/storage";
 
@@ -44,6 +45,8 @@ function tableData(prevState = [], action) {
   switch (action.type) {
     case GET_TABLE_DATA:
       return action.data;
+    case ADD_CATEGORY:
+      return [...prevState, action.data];
     default:
       return prevState;
   }

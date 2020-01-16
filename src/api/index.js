@@ -21,3 +21,13 @@ export const reqGetTableData = () => {
     url: "/category/get"
   });
 };
+
+export const reqAddCategory = categoryName => {
+  return axiosInstance({
+    method: "POST",
+    url: "/category/add",
+    data: {
+      categoryName
+    }
+  });
+};
