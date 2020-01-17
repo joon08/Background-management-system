@@ -52,3 +52,14 @@ export const reqDeleteCategory = categoryId => {
     }
   });
 };
+
+export const reqGetProductList = (pageNum, pageSize) => {
+  return axiosInstance({
+    method: "GET",
+    url: "/product/list",
+    params: {
+      pageNum,
+      pageSize
+    }
+  });
+};
