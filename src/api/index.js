@@ -31,3 +31,24 @@ export const reqAddCategory = categoryName => {
     }
   });
 };
+
+export const reqUpdateCategory = (categoryId, categoryName) => {
+  return axiosInstance({
+    method: "POST",
+    url: "/category/update",
+    data: {
+      categoryId,
+      categoryName
+    }
+  });
+};
+
+export const reqDeleteCategory = categoryId => {
+  return axiosInstance({
+    method: "POST",
+    url: "/category/delete",
+    data: {
+      categoryId
+    }
+  });
+};

@@ -2,16 +2,24 @@ import React, { Component } from "react";
 import { Table, Card, Button, Icon, Modal, message } from "antd";
 import { connect } from "react-redux";
 
-import AddCategory from "./add-category";
-import { getTableDataAsync, addCategoryAsync } from "$redux/actions";
+import CategoryForm from "./category-form";
+import {
+  getTableDataAsync,
+  addCategoryAsync,
+  updateCategoryAsync,
+  deleteCategoryAsync
+} from "$redux/actions";
 
 @connect(state => ({ tableData: state.tableData }), {
   getTableDataAsync,
-  addCategoryAsync
+  addCategoryAsync,
+  updateCategoryAsync,
+  deleteCategoryAsync
 })
 class Category extends Component {
   state = {
-    isShow: false
+    isShow: false,
+    category: {}
   };
 
   componentDidMount() {
@@ -25,26 +33,39 @@ class Category extends Component {
     },
     {
       title: "操作",
-      render: () => {
+      render: category => {
         return (
           <div>
-            <Button type="link">修改分类</Button>
-            <Button type="link">删除分类</Button>
+            <Button type="link" onClick={this.showModal(category)}>
+              修改分类
+            </Button>
+            <Button type="link" onClick={this.deleteCategory(category)}>
+              删除分类
+            </Button>
           </div>
         );
       }
     }
   ];
 
-  addCategory = () => {
+  setCategory = () => {
     const { validateFields, resetFields } = this.form.props.form;
     validateFields((err, values) => {
+      const { name, _id } = this.state.category;
+
       if (!err) {
         const { categoryName } = values;
-        this.props
-          .addCategoryAsync(categoryName)
+        let promise;
+
+        if (name) {
+          promise = this.props.updateCategoryAsync(_id, categoryName);
+        } else {
+          promise = this.props.addCategoryAsync(categoryName);
+        }
+
+        promise
           .then(() => {
-            message.success("添加品类成功");
+            message.success(`${name ? "修改" : "添加"}品类成功`);
             resetFields();
             this.hiddenModal();
           })
@@ -55,16 +76,39 @@ class Category extends Component {
     });
   };
 
+  deleteCategory = category => {
+    return () => {
+      Modal.confirm({
+        title: `您确定删除 ${category.name} 分类吗?`,
+        onOk: () =>  {
+          this.props
+            .deleteCategoryAsync(category._id)
+            .then(() => {
+              message.success("删除成功");
+              // this.hiddenModal();
+            })
+            .catch(err => {
+              message.error(err);
+            });
+        },
+        onCancel() {}
+      });
+    };
+  };
+
   hiddenModal = () => {
     this.setState({
       isShow: false
     });
   };
 
-  showModal = () => {
-    this.setState({
-      isShow: true
-    });
+  showModal = (category = {}) => {
+    return () => {
+      this.setState({
+        isShow: true,
+        category
+      });
+    };
   };
 
   render() {
@@ -74,7 +118,7 @@ class Category extends Component {
       <Card
         title="分类列表"
         extra={
-          <Button type="primary" onClick={this.showModal}>
+          <Button type="primary" onClick={this.showModal()}>
             <Icon type="plus" />
             分类列表
           </Button>
@@ -95,13 +139,16 @@ class Category extends Component {
         />
 
         <Modal
-          title="添加分类"
+          title={this.state.category.name ? "修改分类" : "添加分类"}
           visible={this.state.isShow}
-          onOk={this.addCategory}
+          onOk={this.setCategory}
           onCancel={this.hiddenModal}
           width="350px"
         >
-          <AddCategory wrappedComponentRef={form => (this.form = form)} />
+          <CategoryForm
+            categoryName={this.state.category.name}
+            wrappedComponentRef={form => (this.form = form)}
+          />
         </Modal>
       </Card>
     );
