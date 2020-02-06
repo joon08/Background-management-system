@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { Table, Card, Button, Icon, Input, Select, message } from "antd";
+import { Link } from "react-router-dom";
+
 import { reqGetProductList } from "$api";
 
 export default class Product extends Component {
@@ -82,9 +84,11 @@ export default class Product extends Component {
           </div>
         }
         extra={
-          <Button type="primary">
-            <Icon type="plus" /> 添加商品
-          </Button>
+          <Link to="/product/add">
+            <Button type="primary">
+              <Icon type="plus" /> 添加商品
+            </Button>
+          </Link>
         }
       >
         <Table

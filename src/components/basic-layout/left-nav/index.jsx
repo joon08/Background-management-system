@@ -18,7 +18,9 @@ class LeftNav extends Component {
             title={
               <span>
                 <Icon type={menu.icon} />
-                <span><FormattedMessage id={menu.title} /></span>
+                <span>
+                  <FormattedMessage id={menu.title} />
+                </span>
               </span>
             }
           >
@@ -57,7 +59,8 @@ class LeftNav extends Component {
   };
 
   render() {
-    const { pathname } = this.props.location;
+    let { pathname } = this.props.location;
+    pathname = pathname.indexOf("/product") === -1 ? pathname : "/product";
     const openKey = this.findOpenKeys(pathname, menus);
     return (
       <Menu

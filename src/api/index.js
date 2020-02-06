@@ -63,3 +63,11 @@ export const reqGetProductList = (pageNum, pageSize) => {
     }
   });
 };
+
+export const reqAddProduct = ({ categoryId, name, price, desc, detail }) => {
+  return axiosInstance({
+    method: "POST",
+    url: "/product/add",
+    data: { categoryId, name, price, desc, detail }
+  });
+};

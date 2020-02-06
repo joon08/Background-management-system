@@ -2,6 +2,9 @@ import axios from "axios";
 
 import store from "$redux/store";
 import errCode from "../config/error-code";
+import { removeItem } from "$utils/storage";
+import { removeUser } from "$redux/actions";
+import { message } from "antd";
 
 const axiosInstance = axios.create({
   baseURL: "/api",
@@ -41,7 +44,13 @@ axiosInstance.interceptors.response.use(
   err => {
     let errMsg = "";
     if (err.response) {
-      errMsg = errCode[err.response.status];
+      const status = err.response.status;
+      errMsg = errCode[status];
+      if (status === 401) {
+        removeItem("user");
+        store.dispatch(removeUser());
+        message.error("登录过期，请重新登录");
+      }
     } else {
       if (err.message.indexOf("Network Error") !== -1) {
         errMsg = "网络连接错误";

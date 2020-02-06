@@ -82,7 +82,7 @@ class HeaderMain extends Component {
       if (menu.children) {
         for (let j = 0; j < menu.children.length; j++) {
           const cMenu = menu.children[j];
-          if (cMenu.path === pathname) {
+          if (pathname.indexOf(cMenu.path) !== -1) {
             return cMenu.title;
           }
         }

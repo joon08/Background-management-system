@@ -80,7 +80,7 @@ class Category extends Component {
     return () => {
       Modal.confirm({
         title: `您确定删除 ${category.name} 分类吗?`,
-        onOk: () =>  {
+        onOk: () => {
           this.props
             .deleteCategoryAsync(category._id)
             .then(() => {
@@ -97,9 +97,11 @@ class Category extends Component {
   };
 
   hiddenModal = () => {
+    const { resetFields } = this.form.props.form;
     this.setState({
       isShow: false
     });
+    resetFields();
   };
 
   showModal = (category = {}) => {
