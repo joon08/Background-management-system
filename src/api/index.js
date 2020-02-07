@@ -71,3 +71,46 @@ export const reqAddProduct = ({ categoryId, name, price, desc, detail }) => {
     data: { categoryId, name, price, desc, detail }
   });
 };
+
+export const reqUpdateProduct = ({
+  categoryId,
+  name,
+  price,
+  desc,
+  detail,
+  productId
+}) => {
+  return axiosInstance({
+    method: "POST",
+    url: "/product/update",
+    data: { categoryId, name, price, desc, detail, productId }
+  });
+};
+
+export const reqSearchProductList = ({
+  searchType,
+  searchValue,
+  pageNum,
+  pageSize
+}) => {
+  return axiosInstance({
+    method: "GET",
+    url: "/product/search",
+    params: {
+      [searchType]: searchValue,
+      pageNum,
+      pageSize
+    }
+  });
+};
+
+export const reqUpdateProductStatus = (productId, status) => {
+  return axiosInstance({
+    method: "POST",
+    url: "/product/update/status",
+    data: {
+      productId,
+      status
+    }
+  });
+};

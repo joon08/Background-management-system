@@ -23,7 +23,9 @@ class Category extends Component {
   };
 
   componentDidMount() {
-    this.props.getTableDataAsync();
+    if (!this.props.tableData.length) {
+      this.props.getTableDataAsync();
+    }
   }
 
   columns = [

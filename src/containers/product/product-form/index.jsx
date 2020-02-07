@@ -14,7 +14,7 @@ import "braft-editor/dist/index.css";
 import { connect } from "react-redux";
 
 import { getTableDataAsync } from "$redux/actions";
-import { reqAddProduct } from "$api";
+import { reqAddProduct, reqUpdateProduct } from "$api";
 
 import "./index.less";
 
@@ -23,11 +23,7 @@ const { Item } = Form,
 
 @connect(state => ({ tableData: state.tableData }), { getTableDataAsync })
 @Form.create()
-class AddProduct extends Component {
-  // state = {
-  //   editorState: BraftEditor.createEditorState(null)
-  // };
-
+class ProductForm extends Component {
   componentDidMount() {
     if (!this.props.tableData.length) {
       this.props.getTableDataAsync();
@@ -40,16 +36,36 @@ class AddProduct extends Component {
     validateFields((err, values) => {
       if (!err) {
         const { name, desc, categoryId, price, detail } = values;
-        reqAddProduct({
-          name,
-          desc,
-          categoryId,
-          price,
-          detail: detail.toHTML()
-        })
+        let promise = null;
+
+        if (this.props.location.pathname.indexOf("/update/") === -1) {
+          promise = reqAddProduct({
+            name,
+            desc,
+            categoryId,
+            price,
+            detail: detail.toHTML()
+          });
+        } else {
+          promise = reqUpdateProduct({
+            name,
+            desc,
+            categoryId,
+            price,
+            detail: detail.toHTML(),
+            productId: this.props.match.params.id
+          });
+        }
+
+        promise
           .then(res => {
-            console.log(res);
-            message.success("添加商品成功");
+            message.success(
+              `${
+                this.props.location.pathname.indexOf("/update/") === -1
+                  ? "添加"
+                  : "修改"
+              }商品成功`
+            );
             // 跳转到商品页面，查看
             this.goBack();
           })
@@ -64,11 +80,27 @@ class AddProduct extends Component {
     this.props.history.push("/product");
   };
 
+  handleCategoryId = categoryId => {
+    if (!categoryId) return "0";
+
+    const {
+      tableData,
+      location: { state }
+    } = this.props;
+    const category = tableData.find(item => item._id === state.categoryId);
+
+    if (category) return category.name;
+
+    return "0";
+  };
+
   render() {
     const {
       form: { getFieldDecorator },
-      tableData
+      tableData,
+      location: { state, pathname }
     } = this.props;
+
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
@@ -79,6 +111,7 @@ class AddProduct extends Component {
         sm: { span: 8 }
       }
     };
+
     return (
       <Card
         title={
@@ -88,7 +121,7 @@ class AddProduct extends Component {
               className="arrow-left"
               onClick={this.goBack}
             />
-            添加商品
+            {`${pathname.indexOf("/update/") === -1 ? "添加" : "修改"}商品`}
           </div>
         }
       >
@@ -100,7 +133,9 @@ class AddProduct extends Component {
                   required: true,
                   message: "请输入商品名称"
                 }
-              ]
+              ],
+              initialValue:
+                pathname.indexOf("/update/") === -1 ? "" : state.name
             })(<Input placeholder="请输入商品名称" />)}
           </Item>
           <Item label="商品描述：">
@@ -110,7 +145,9 @@ class AddProduct extends Component {
                   required: true,
                   message: "请输入商品描述"
                 }
-              ]
+              ],
+              initialValue:
+                pathname.indexOf("/update/") === -1 ? "" : state.desc
             })(<Input placeholder="请输入商品描述" />)}
           </Item>
           <Item label="商品分类：">
@@ -120,9 +157,14 @@ class AddProduct extends Component {
                   required: true,
                   message: "请选择商品分类"
                 }
-              ]
+              ],
+              initialValue:
+                pathname.indexOf("/update/") === -1
+                  ? ""
+                  : this.handleCategoryId(state.categoryId)
             })(
               <Select>
+                <Option value="0">暂无分类</Option>
                 {tableData.map(item => (
                   <Option key={item._id} value={item._id}>
                     {item.name}
@@ -138,7 +180,9 @@ class AddProduct extends Component {
                   required: true,
                   message: "请输入商品价格"
                 }
-              ]
+              ],
+              initialValue:
+                pathname.indexOf("/update/") === -1 ? "" : state.price
             })(
               <InputNumber
                 className="product-price"
@@ -156,7 +200,11 @@ class AddProduct extends Component {
                   required: true,
                   message: "请输入商品详情"
                 }
-              ]
+              ],
+              initialValue:
+                pathname.indexOf("/update/") === -1
+                  ? ""
+                  : BraftEditor.createEditorState(state.detail)
             })(
               <BraftEditor
                 className="braft-editor"
@@ -175,4 +223,4 @@ class AddProduct extends Component {
   }
 }
 
-export default AddProduct;
+export default ProductForm;
