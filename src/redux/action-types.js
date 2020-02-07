@@ -8,3 +8,5 @@ export const GET_TABLE_DATA = "GET_TABLE_DATA";
 export const ADD_CATEGORY = "ADD_CATEGORY";
 export const UPDATE_CATEGORY = "UPDATE_CATEGORY";
 export const DELETE_CATEGORY = "DELETE_CATEGORY";
+export const ROLE_LIST = "ROLE_LIST";
+export const ADD_ROLE = "ADD_ROLE";

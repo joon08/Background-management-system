@@ -5,7 +5,9 @@ import {
   reqAddCategory,
   reqLogin,
   reqUpdateCategory,
-  reqDeleteCategory
+  reqDeleteCategory,
+  reqRoleList,
+  reqAddRole
 } from "$api";
 import { setItem } from "../utils/storage";
 import {
@@ -16,7 +18,9 @@ import {
   GET_TABLE_DATA,
   ADD_CATEGORY,
   UPDATE_CATEGORY,
-  DELETE_CATEGORY
+  DELETE_CATEGORY,
+  ROLE_LIST,
+  ADD_ROLE
 } from "./action-types";
 import axios from "axios";
 
@@ -99,6 +103,32 @@ export function deleteCategoryAsync(categoryId) {
     return reqDeleteCategory(categoryId)
       .then(response => {
         dispatch(deleteCategory(response));
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+}
+
+const roleList = roles => ({ type: ROLE_LIST, data: roles });
+export function roleListAsync() {
+  return dispatch => {
+    return reqRoleList()
+      .then(response => {
+        dispatch(roleList(response));
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+}
+
+const addRole = role => ({ type: ADD_ROLE, data: role });
+export function addRoleAsync(name) {
+  return dispatch => {
+    return reqAddRole(name)
+      .then(response => {
+        dispatch(addRole(response));
       })
       .catch(err => {
         console.log(err);

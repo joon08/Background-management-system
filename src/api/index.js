@@ -114,3 +114,20 @@ export const reqUpdateProductStatus = (productId, status) => {
     }
   });
 };
+
+export const reqRoleList = () => {
+  return axiosInstance({
+    method: "GET",
+    url: "/role/get"
+  });
+};
+
+export const reqAddRole = name => {
+  return axiosInstance({
+    method: "POST",
+    url: "/role/add",
+    data: {
+      name
+    }
+  });
+};

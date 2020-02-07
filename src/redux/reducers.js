@@ -8,7 +8,9 @@ import {
   GET_TABLE_DATA,
   ADD_CATEGORY,
   UPDATE_CATEGORY,
-  DELETE_CATEGORY
+  DELETE_CATEGORY,
+  ROLE_LIST,
+  ADD_ROLE
 } from "./action-types";
 import { getItem } from "../utils/storage";
 
@@ -63,9 +65,22 @@ function tableData(prevState = [], action) {
   }
 }
 
+const initRoles = [];
+function roles(prevState = initRoles, action) {
+  switch (action.type) {
+    case ROLE_LIST:
+      return action.data;
+    case ADD_ROLE:
+      return [...prevState, action.data];
+    default:
+      return prevState;
+  }
+}
+
 export default combineReducers({
   user,
   string,
   language,
-  tableData
+  tableData,
+  roles
 });
