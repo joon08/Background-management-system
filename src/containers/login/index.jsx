@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 
 import withCheckLogin from "$cont/with-check-login";
 import { saveUserAsync, getLineAsync } from "../../redux/actions";
+import { validator } from "$utils/tools";
 
 import "./index.less";
 import logo from "$assets/imgs/favicon.ico";
@@ -13,18 +14,18 @@ import logo from "$assets/imgs/favicon.ico";
 @Form.create()
 class Login extends Component {
   //表单输入校验
-  validator = (rule, value, callback) => {
-    const hint = rule.field === "username" ? "用户名" : "密码";
-    const reg = /^\w+$/;
-    if (!value) {
-      callback(`${hint}不能为空`);
-    } else if (value.length < 4 || value.length > 12) {
-      callback(`${hint}长度需为4-12位`);
-    } else if (!reg.test(value)) {
-      callback(`${hint}只能包含数字、字母、下划线`);
-    }
-    callback(); //callback必须调用
-  };
+  // validator = (rule, value, callback) => {
+  //   const hint = rule.field === "username" ? "用户名" : "密码";
+  //   const reg = /^\w+$/;
+  //   if (!value) {
+  //     callback(`${hint}不能为空`);
+  //   } else if (value.length < 4 || value.length > 12) {
+  //     callback(`${hint}长度需为4-12位`);
+  //   } else if (!reg.test(value)) {
+  //     callback(`${hint}只能包含数字、字母、下划线`);
+  //   }
+  //   callback(); //callback必须调用
+  // };
 
   handleSubmit = e => {
     e.preventDefault();
@@ -70,7 +71,11 @@ class Login extends Component {
                     message: "用户名只能包含数字、字母、下划线"
                   } */
                   {
-                    validator: this.validator
+                    required: true,
+                    message: "用户名不能为空"
+                  },
+                  {
+                    validator
                   }
                 ]
               })(
@@ -85,7 +90,13 @@ class Login extends Component {
             </Form.Item>
             <Form.Item>
               {getFieldDecorator("password", {
-                rules: [{ validator: this.validator }]
+                rules: [
+                  {
+                    required: true,
+                    message: "用户名不能为空"
+                  },
+                  { validator }
+                ]
               })(
                 <Input
                   prefix={
