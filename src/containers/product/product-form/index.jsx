@@ -119,7 +119,6 @@ class ProductForm extends Component {
     } = this.props;
 
     const newState = state ? state : this.state.product;
-    console.log(newState);
 
     const formItemLayout = {
       labelCol: {

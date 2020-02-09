@@ -142,3 +142,16 @@ export const reqGetProduct = productId => {
     }
   });
 };
+
+// 请求设置角色权限数据
+export const reqUpdateRole = ({ roleId, authName, menus }) => {
+  return axiosInstance({
+    url: '/role/update',
+    method: 'POST',
+    data: {
+      roleId,
+      authName,
+      menus
+    }
+  });
+};

@@ -7,7 +7,8 @@ import {
   reqUpdateCategory,
   reqDeleteCategory,
   reqRoleList,
-  reqAddRole
+  reqAddRole,
+  reqUpdateRole
 } from "$api";
 import { setItem } from "../utils/storage";
 import {
@@ -20,7 +21,8 @@ import {
   UPDATE_CATEGORY,
   DELETE_CATEGORY,
   ROLE_LIST,
-  ADD_ROLE
+  ADD_ROLE,
+  UPDATE_ROLE
 } from "./action-types";
 import axios from "axios";
 
@@ -135,3 +137,19 @@ export function addRoleAsync(name) {
       });
   };
 }
+
+// 同步action
+const updateRole = role => ({ type: UPDATE_ROLE, data: role });
+// 异步action
+export const updateRoleAsync = name => {
+  return dispatch => {
+    // 执行异步操作
+    return reqUpdateRole(name).then(res => {
+      // 请求成功，更新redux状态
+      dispatch(updateRole(res));
+
+      // 将请求更新后的role返回出去
+      return res;
+    });
+  };
+};
