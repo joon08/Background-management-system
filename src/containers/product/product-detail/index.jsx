@@ -50,7 +50,7 @@ class ProductDetail extends Component {
         <Descriptions bordered>
           <Item label="商品名称">{state.name}</Item>
           <Item label="商品描述">{state.desc}</Item>
-          <Item label="商品价格">{state.price}</Item>
+          <Item label="商品价格">￥{state.price}</Item>
           <Item label="商品分类">{this.handleCategory(state.categoryId)}</Item>
           <Item label="商品状态" span={2}>
             {state.status === 1 ? "下架" : "上架"}

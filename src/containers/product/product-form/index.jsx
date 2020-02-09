@@ -14,7 +14,7 @@ import "braft-editor/dist/index.css";
 import { connect } from "react-redux";
 
 import { getTableDataAsync } from "$redux/actions";
-import { reqAddProduct, reqUpdateProduct } from "$api";
+import { reqAddProduct, reqUpdateProduct, reqGetProduct } from "$api";
 
 import "./index.less";
 
@@ -24,9 +24,29 @@ const { Item } = Form,
 @connect(state => ({ tableData: state.tableData }), { getTableDataAsync })
 @Form.create()
 class ProductForm extends Component {
+  state = {
+    product: {}
+  };
+
   componentDidMount() {
     if (!this.props.tableData.length) {
       this.props.getTableDataAsync();
+    }
+
+    if (
+      this.props.location.pathname.indexOf("/update/") !== -1 &&
+      !this.props.location.state
+    ) {
+      const productId = this.props.match.params.id;
+      reqGetProduct(productId)
+        .then(res => {
+          this.setState({
+            product: res
+          });
+        })
+        .catch(err => {
+          message.error(err);
+        });
     }
   }
 
@@ -80,14 +100,11 @@ class ProductForm extends Component {
     this.props.history.push("/product");
   };
 
-  handleCategoryId = categoryId => {
+  handleCategoryId = (categoryId, newState) => {
     if (!categoryId) return "0";
 
-    const {
-      tableData,
-      location: { state }
-    } = this.props;
-    const category = tableData.find(item => item._id === state.categoryId);
+    const { tableData } = this.props;
+    const category = tableData.find(item => item._id === newState.categoryId);
 
     if (category) return category.name;
 
@@ -100,6 +117,9 @@ class ProductForm extends Component {
       tableData,
       location: { state, pathname }
     } = this.props;
+
+    const newState = state ? state : this.state.product;
+    console.log(newState);
 
     const formItemLayout = {
       labelCol: {
@@ -135,7 +155,7 @@ class ProductForm extends Component {
                 }
               ],
               initialValue:
-                pathname.indexOf("/update/") === -1 ? "" : state.name
+                pathname.indexOf("/update/") === -1 ? "" : newState.name
             })(<Input placeholder="请输入商品名称" />)}
           </Item>
           <Item label="商品描述：">
@@ -147,7 +167,7 @@ class ProductForm extends Component {
                 }
               ],
               initialValue:
-                pathname.indexOf("/update/") === -1 ? "" : state.desc
+                pathname.indexOf("/update/") === -1 ? "" : newState.desc
             })(<Input placeholder="请输入商品描述" />)}
           </Item>
           <Item label="商品分类：">
@@ -161,7 +181,7 @@ class ProductForm extends Component {
               initialValue:
                 pathname.indexOf("/update/") === -1
                   ? ""
-                  : this.handleCategoryId(state.categoryId)
+                  : this.handleCategoryId(newState.categoryId, newState)
             })(
               <Select>
                 <Option value="0">暂无分类</Option>
@@ -182,7 +202,7 @@ class ProductForm extends Component {
                 }
               ],
               initialValue:
-                pathname.indexOf("/update/") === -1 ? "" : state.price
+                pathname.indexOf("/update/") === -1 ? "" : newState.price
             })(
               <InputNumber
                 className="product-price"
@@ -204,7 +224,7 @@ class ProductForm extends Component {
               initialValue:
                 pathname.indexOf("/update/") === -1
                   ? ""
-                  : BraftEditor.createEditorState(state.detail)
+                  : BraftEditor.createEditorState(newState.detail)
             })(
               <BraftEditor
                 className="braft-editor"

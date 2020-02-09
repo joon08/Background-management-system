@@ -24,9 +24,11 @@ class App extends Component {
             <Switch>
               <Route path="/login" exact component={Login} />
               <BasicLayout>
-                {routes.map(route => (
-                  <Route {...route} key={route.path} />
-                ))}
+                <Switch>
+                  {routes.map(route => (
+                    <Route {...route} key={route.path} />
+                  ))}
+                </Switch>
               </BasicLayout>
             </Switch>
           </Router>

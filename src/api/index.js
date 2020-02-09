@@ -131,3 +131,14 @@ export const reqAddRole = name => {
     }
   });
 };
+
+// 请求获取单个商品数据
+export const reqGetProduct = productId => {
+  return axiosInstance({
+    method: 'GET',
+    url: '/product/get',
+    params: {
+      productId
+    }
+  });
+};

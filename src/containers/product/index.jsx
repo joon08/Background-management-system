@@ -14,7 +14,8 @@ export default class Product extends Component {
     list: [],
     searchType: "productName",
     searchValue: "",
-    isLoading: false
+    isLoading: false,
+    current: 1
   };
   currSearchValue = "";
   columns = [
@@ -28,7 +29,8 @@ export default class Product extends Component {
     },
     {
       title: "价格",
-      dataIndex: "price"
+      dataIndex: "price",
+      render: price => "￥" + price
     },
     {
       title: "商品状态",
@@ -136,7 +138,8 @@ export default class Product extends Component {
           total: response.total,
           list: response.list,
           searchValue: currSearchValue,
-          isLoading: false
+          isLoading: false,
+          current: pageNum
         });
         message.success(`${currSearchValue ? "搜索" : "获取"}商品列表数据成功`);
       })
@@ -188,7 +191,8 @@ export default class Product extends Component {
             showQuickJumper: true,
             total: this.state.total,
             onChange: this.getProductList, // 页码发生变化触发的函数
-            onShowSizeChange: this.getProductList // pageSize 变化的回调
+            onShowSizeChange: this.getProductList, // pageSize 变化的回调
+            current: this.state.current
           }}
           rowKey="_id"
           bordered
