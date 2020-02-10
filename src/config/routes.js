@@ -5,6 +5,9 @@ import ProductForm from "../containers/product/product-form";
 import ProductDetail from "../containers/product/product-detail";
 import Role from "../containers/role";
 import User from "../containers/user";
+import Bar from "../components/charts/bar";
+import Map from "../components/charts/map";
+import Pie from "../components/charts/pie";
 
 const routes = [
   {
@@ -46,6 +49,21 @@ const routes = [
     path: "/user",
     exact: true,
     component: User
+  },
+  {
+    path: "/charts/bar",
+    exact: true,
+    component: Bar
+  },
+  {
+    path: "/charts/line",
+    exact: true,
+    component: Map
+  },
+  {
+    path: "/charts/pie",
+    exact: true,
+    component: Pie
   }
 ];
 

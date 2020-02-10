@@ -5,6 +5,7 @@ import { FormattedMessage } from "react-intl";
 import withCheckLogin from "$cont/with-check-login";
 import LeftNav from "./left-nav";
 import HeaderMain from "./header-main";
+import ThemePicker from "./theme-picker";
 
 import logo from "$assets/imgs/favicon.ico";
 import "./index.less";
@@ -51,6 +52,7 @@ class BasicLayout extends Component {
             Ant Design ©2020 Created by Ant UED
           </Footer>
         </Layout>
+        <ThemePicker />
       </Layout>
     );
   }
