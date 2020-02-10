@@ -11,12 +11,30 @@ import zh_CN from "antd/es/locale/zh_CN";
 import en_us from "antd/es/locale/en_US";
 import routes from "./config/routes";
 
-@connect(state => ({ language: state.language }), null)
+@connect(state => ({ language: state.language, user: state.user.user }), null)
 class App extends Component {
   render() {
-    const language = this.props.language;
+    const { language, user } = this.props;
     const isEN = language === "en";
 
+    /*
+      登录过 user就有
+      没有登录过 user为undefined
+    */
+    let filterRoutes = [];
+
+    if (user) {
+      const roleMenus = user.menus;
+      // 对route进行权限管理
+      filterRoutes = routes.filter(route => {
+        return roleMenus.find(menu => {
+          return (
+            route.path === menu ||
+            (menu === "/product" && route.path.startsWith(menu))
+          );
+        });
+      });
+    }
     return (
       <ConfigProvider locale={isEN ? en_us : zh_CN}>
         <IntlProvider locale={language} messages={isEN ? en : zhCN}>
@@ -25,7 +43,7 @@ class App extends Component {
               <Route path="/login" exact component={Login} />
               <BasicLayout>
                 <Switch>
-                  {routes.map(route => (
+                  {filterRoutes.map(route => (
                     <Route {...route} key={route.path} />
                   ))}
                 </Switch>
